@@ -1,0 +1,8 @@
+#menu{
+    z-index: 0;
+    backdrop-filter: blur(1px);
+    border-radius: 15px;
+    width: 15vw;
+    margin: 1vw;
+    border: solid;
+}

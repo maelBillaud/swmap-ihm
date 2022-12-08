@@ -1,9 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { ReactDOM } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import getMapBoxAccessToken from "../environments/environment.js";
 import "../styles/Map.css"
 import Marker from './Maker.js';
+
+var ReactDOMServer = require('react-dom/server');
 
 mapboxgl.accessToken = getMapBoxAccessToken();
 
@@ -21,11 +24,12 @@ function Map() {
 
         const marker1 = new mapboxgl.Marker({color: "red"})
             .setLngLat([-1.552955180984841, 47.216061233335395])
+            .setPopup(new mapboxgl.Popup().setHTML("<h1>Test</h1>"))
             .addTo(map);
 
         const firstStreetParc = new mapboxgl.Marker({color: "red"})
             .setLngLat([-1.4939905439296215, 47.301400982695824])
-            .setPopup(new mapboxgl.Popup().setHTML("<h1>test</h1>"))
+            .setPopup(new mapboxgl.Popup().setHTML(ReactDOMServer.renderToString(<Marker text={"bliblablou"}/>)))
             .addTo(map);
 
         // add navigation control (the +/- zoom buttons)
@@ -34,6 +38,11 @@ function Map() {
         // clean up on unmount
         return () => map.remove();
     }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+
+    function newFunct () {
+        return "rien";
+    }
+    
 
     return <div className="map-container" ref={mapContainerRef} />;
 }
