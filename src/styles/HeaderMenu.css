@@ -1,15 +1,12 @@
-#logo{
-    border-radius: 50%;
-    max-width: 50px;
-    max-height: 50px;
-    margin-right: 10px;
+#logo {
+  border-radius: 50%;
+  max-width: 50px;
+  max-height: 50px;
+  margin-right: 10px;
 }
 
-#name{
-}
-
-#container{
-    display: flex;
-    padding-inline: 10px;
-    align-items: center;
+#menu-container {
+  display: flex;
+  padding-inline: 10px;
+  align-items: center;
 }
