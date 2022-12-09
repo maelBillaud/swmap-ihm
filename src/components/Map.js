@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
-import { ReactDOM } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import getMapBoxAccessToken from "../environments/environment.js";
 import "../styles/Map.css";
@@ -10,7 +9,7 @@ var ReactDOMServer = require("react-dom/server");
 
 mapboxgl.accessToken = getMapBoxAccessToken();
 
-function Map() {
+function Map({ markers, setMarkers }) {
   const mapContainerRef = useRef(null);
 
   // initialize map when component mounts
@@ -22,7 +21,7 @@ function Map() {
       zoom: 12, // starting zoom
     });
 
-    const marker1 = new mapboxgl.Marker({ color: "red" })
+    new mapboxgl.Marker({ color: "red" })
       .setLngLat([-1.552955180984841, 47.216061233335395])
       .setPopup(new mapboxgl.Popup().setHTML("<h1>Test</h1>"))
       .addTo(map);
