@@ -12,28 +12,42 @@ mapboxgl.accessToken = getMapBoxAccessToken();
 function Map({ markers, setMarkers }) {
   const mapContainerRef = useRef(null);
 
-  // initialize map when component mounts
+  // Initialisation de la map lors du changement du composant
   useEffect(() => {
     const map = new mapboxgl.Map({
-      container: mapContainerRef.current, // container ID
+      container: mapContainerRef.current, // id du container
       style: "mapbox://styles/mapbox/streets-v12", // style URL
-      center: [-1.552955180984841, 47.216061233335395], // starting position [lng, lat]
-      zoom: 12, // starting zoom
+      center: [-1.552955180984841, 47.216061233335395], // position de départ
+      zoom: 12, // zoom de départ
     });
 
-    new mapboxgl.Marker({ color: "red" })
-      .setLngLat([-1.552955180984841, 47.216061233335395])
-      .setPopup(new mapboxgl.Popup().setHTML("<h1>Test</h1>"))
-      .addTo(map);
+    //Ajout des markers sur la map
+    markers.forEach((marker) => {
+      console.log("🚀 ~ file: Map.js:35 ~ markers.forEach ~ marker", marker);
 
-    const firstStreetParc = new mapboxgl.Marker({ color: "red" })
-      .setLngLat([-1.4939905439296215, 47.301400982695824])
-      .setPopup(
-        new mapboxgl.Popup().setHTML(
-          ReactDOMServer.renderToString(<Marker text={"bliblablou"} />)
+      new mapboxgl.Marker({ color: "red" })
+        .setLngLat([marker.longitude, marker.latitude])
+        .setPopup(
+          new mapboxgl.Popup().setHTML(
+            ReactDOMServer.renderToString(<Marker marker={marker} />)
+          )
         )
-      )
-      .addTo(map);
+        .addTo(map);
+    });
+
+    // new mapboxgl.Marker({ color: "red" })
+    //   .setLngLat([-1.552955180984841, 47.216061233335395])
+    //   .setPopup(new mapboxgl.Popup().setHTML("<h1>Test</h1>"))
+    //   .addTo(map);
+
+    // const firstStreetParc = new mapboxgl.Marker({ color: "red" })
+    //   .setLngLat([-1.4939905439296215, 47.301400982695824])
+    //   .setPopup(
+    //     new mapboxgl.Popup().setHTML(
+    //       ReactDOMServer.renderToString(<Marker text={"bliblablou"} />)
+    //     )
+    //   )
+    //   .addTo(map);
 
     // add navigation control (the +/- zoom buttons)
     map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
