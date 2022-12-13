@@ -35,6 +35,16 @@ function Map({ markers, setMarkers }) {
         .addTo(map);
     });
 
+    map.on("click", (e) => {
+      // When the map is clicked, get the geographic coordinate.
+      const coordinate = map.unproject(e.point);
+      console.log("🚀 ~ file: Map.js:41 ~ map.on ~ coordinate", coordinate);
+      new mapboxgl.Marker({ color: "red" })
+        .setLngLat([coordinate.lng, coordinate.lat])
+        .setPopup(new mapboxgl.Popup().setHTML("<h1>test<h1/>"))
+        .addTo(map);
+    });
+
     // new mapboxgl.Marker({ color: "red" })
     //   .setLngLat([-1.552955180984841, 47.216061233335395])
     //   .setPopup(new mapboxgl.Popup().setHTML("<h1>Test</h1>"))
