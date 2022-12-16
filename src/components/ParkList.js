@@ -1,6 +1,7 @@
 import { Checkbox, Switch } from "@mantine/core";
 import { useState } from "react";
 import "../styles/ParkList.css";
+import Marker from "./Maker.js";
 
 function ParkList({ markers, setMarkers }) {
   const [equipmentList, setEquipmentList] = useState([]);
@@ -19,14 +20,13 @@ function ParkList({ markers, setMarkers }) {
           <div>
             <Checkbox value="horizontalBar" label="Barre fixe" />
             <Checkbox value="lowParallelBar" label="Barre parallèle basse" />
-            <Checkbox value="fixedRings" label="Anneau fixes" />
+            <Checkbox value="fixedRings" label="Anneaux fixes" />
           </div>
           <div>
             <Checkbox value="parallelBar" label="Barre parallèle" />
             <Checkbox value="espalier" label="Espalier" />
             <Checkbox value="monkeyBridge" label="Pont de singe" />
           </div>
-          <p></p>
         </Checkbox.Group>
       </div>
       <div id="switch">
@@ -42,7 +42,11 @@ function ParkList({ markers, setMarkers }) {
           description="Vérifié par au moins 5 utilisateurs"
         />
       </div>
-      <div id="content"></div>
+      <div id="content">
+        {markers.map((value, index) => {
+          return <Marker key={index} marker={value} />;
+        })}
+      </div>
     </div>
   );
 }

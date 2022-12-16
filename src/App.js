@@ -24,7 +24,7 @@ const markersFromAPI = [
   {
     parkId: 2,
     equipment: {
-      equipmentId: 4,
+      equipmentId: 2,
       horizontalBar: 1,
       parallelBar: 0,
       lowParallelBar: 1,
@@ -34,6 +34,22 @@ const markersFromAPI = [
     },
     latitude: 47.216061233335395,
     longitude: -1.552955180984841,
+    isCovered: true,
+    isVerified: true,
+  },
+  {
+    parkId: 3,
+    equipment: {
+      equipmentId: 3,
+      horizontalBar: 1,
+      parallelBar: 0,
+      lowParallelBar: 1,
+      espalier: 1,
+      fixedRings: 1,
+      monkeyBridge: 1,
+    },
+    latitude: 47.21607,
+    longitude: -1.55296,
     isCovered: true,
     isVerified: true,
   },
@@ -48,10 +64,16 @@ function App() {
   return (
     <div>
       <div id="nav-filter">
-        <NavBar showFilters={showFilters} setShowFilters={setShowFilters} />
-        {showFilters && <ParkList markers={markers} setMarkers={setMarkers} />}
+        <div>
+          <NavBar showFilters={showFilters} setShowFilters={setShowFilters} />
+        </div>
+        <div>
+          {showFilters && (
+            <ParkList markers={markers} setMarkers={setMarkers} />
+          )}
+        </div>
+        <Map markers={markers} setMarkers={setMarkers} />
       </div>
-      <Map markers={markers} setMarkers={setMarkers} />
     </div>
   );
 }

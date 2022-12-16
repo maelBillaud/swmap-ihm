@@ -24,7 +24,6 @@ function Map({ markers, setMarkers }) {
     //Ajout des markers sur la map
     markers.forEach((marker) => {
       console.log("🚀 ~ file: Map.js:35 ~ markers.forEach ~ marker", marker);
-
       new mapboxgl.Marker({ color: "red" })
         .setLngLat([marker.longitude, marker.latitude])
         .setPopup(

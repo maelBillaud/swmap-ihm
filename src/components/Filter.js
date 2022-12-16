@@ -17,7 +17,7 @@ function Filter({ showFilters, setShowFilters }) {
         onClick={switchFilterState}
       />
       <Button id="filter-button" onClick={switchFilterState}>
-        Filters
+        Filtres
       </Button>
     </div>
   );

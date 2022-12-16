@@ -1,3 +1,24 @@
-h1{
-    color: red;
+@font-face {
+  font-family: "Arimo";
+  src: url("../fonts/Arimo-Regular.ttf");
+}
+
+#marker-container {
+  font-family: "Arimo", sans-serif;
+  font-size: medium;
+  border: solid gray;
+  border-radius: 15px;
+  padding-inline: 5%;
+  padding-bottom: 5%;
+  margin-inline: 1vh;
+}
+
+.equipments {
+  list-style: none;
+}
+
+.icons {
+  margin-right: 3%;
+  position: relative;
+  top: 5px;
 }
