@@ -12,6 +12,17 @@
   flex-direction: column;
 }
 
+#btn-appliquer {
+  display: flex;
+  justify-content: right;
+  margin-top: 5%;
+  margin-right: 5%;
+}
+
+#slider {
+  margin: 5% 5%;
+}
+
 /* Firefox */
 #content {
   display: flex;
