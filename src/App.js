@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Alert } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons";
 import Map from "./components/Map";
 import NavBar from "./components/NavBar";
 import ParkList from "./components/ParkList";
@@ -60,16 +62,38 @@ function App() {
   //Ici on n'utilise pas de context car les markers sont susceptibles de changer
   //et on veut éviter trop de rechargement des composants fils
   const [markers, setMarkers] = useState(markersFromAPI);
+  const [showAlert, setShowAlert] = useState(false);
 
   return (
     <div>
+      {showAlert && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title="Géolocalisation désactivée!"
+          radius="lg"
+          color="red"
+          withCloseButton
+          variant="filled"
+          onClose={() => setShowAlert(false)}
+          className="alert"
+        >
+          Veuillez activer et autoriser la géolocalisation pour utiliser ce
+          filtre.
+        </Alert>
+      )}
+
       <div id="nav-filter">
         <div>
           <NavBar showFilters={showFilters} setShowFilters={setShowFilters} />
         </div>
         <div>
           {showFilters && (
-            <ParkList markers={markers} setMarkers={setMarkers} />
+            <ParkList
+              markers={markers}
+              setMarkers={setMarkers}
+              markersFromAPI={markersFromAPI}
+              setShowAlert={setShowAlert}
+            />
           )}
         </div>
         <Map markers={markers} setMarkers={setMarkers} />

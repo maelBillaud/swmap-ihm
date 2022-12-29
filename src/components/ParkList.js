@@ -3,19 +3,51 @@ import { useState } from "react";
 import "../styles/ParkList.css";
 import Marker from "./Maker.js";
 
-function ParkList({ markers, setMarkers }) {
+/* markersFromAPI sera une constante qui va nous permettre de réinitialiser les filtres */
+function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
   const [equipmentList, setEquipmentList] = useState([]);
   const [isCovered, setCovered] = useState(false);
   const [isVerified, setVerified] = useState(false);
-  const [useDistance, setUseDistance] = useState(
-    "Par rapport à la géo-localisation"
-  );
+  const [useDistance, setUseDistance] = useState(false);
   const [distance, setDistance] = useState(0);
+  const [userPosition, setUserPosition] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  /**
+   * Fonction qui va vérifier tous les filtres et retourner la liste de markers correspondante
+   */
+  function checkFilters(marker) {
+    if (isCovered) {
+      if (!marker.isCovered) {
+        return false;
+      }
+    }
+
+    if (isVerified) {
+      if (!marker.isVerified) {
+        return false;
+      }
+    }
+
+    // On fait un for et non un while car on aura au maximum 6 éléments dans le tableau
+    for (let i = 0; i < equipmentList.length; i++) {
+      if (marker.equipment[equipmentList[i]] === 0) {
+        return false;
+      }
+    }
+
+    console.log(userPosition);
+
+    return true;
+  }
 
   /**
    * Function qui va appliquer les filtres utilisateurs
    */
-  function applyFilters() {}
+  function applyFilters() {
+    setMarkers(markersFromAPI.filter(checkFilters));
+  }
 
   return (
     <div id="container">
@@ -60,9 +92,25 @@ function ParkList({ markers, setMarkers }) {
           checked={useDistance}
           onChange={(event) => {
             setUseDistance(event.currentTarget.checked);
+            if (!useDistance) {
+              navigator.geolocation.getCurrentPosition(
+                function (position) {
+                  setUserPosition({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                  });
+                },
+                function (error) {
+                  if (error.code === error.PERMISSION_DENIED) {
+                    setShowAlert(true);
+                    setUseDistance(false);
+                  }
+                }
+              );
+            }
           }}
           label={useDistance ? `Distance  - ${distance}km` : "Distance"}
-          description={useDistance ? `` : `Par rapport à la géo-localisation`}
+          description={useDistance ? `` : `Par rapport à la géolocalisation`}
         />
         {useDistance && (
           <Slider
@@ -79,6 +127,7 @@ function ParkList({ markers, setMarkers }) {
           />
         )}
       </div>
+
       <div id="btn-appliquer">
         <Button radius="xl" compact onClick={applyFilters}>
           Appliquer les filtres
