@@ -14,6 +14,23 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
     latitude: 0,
     longitude: 0,
   });
+
+  /** Function qui va calculer la distance entre 2 points en kilomètre grace à la formule de Haversine */
+  function distanceBetweenPoints(point1, point2) {
+    let theta = point1.longitude - point2.longitude;
+    let distance =
+      60 *
+      1.1515 *
+      (180 / Math.PI) *
+      Math.acos(
+        Math.sin(point1.latitude * (Math.PI / 180)) *
+          Math.sin(point2.latitude * (Math.PI / 180)) +
+          Math.cos(point1.latitude * (Math.PI / 180)) *
+            Math.cos(point2.latitude * (Math.PI / 180)) *
+            Math.cos(theta * (Math.PI / 180))
+      );
+    return Math.round(distance * 1.609344, 2);
+  }
   /**
    * Fonction qui va vérifier tous les filtres et retourner la liste de markers correspondante
    */
@@ -30,14 +47,16 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
       }
     }
 
-    // On fait un for et non un while car on aura au maximum 6 éléments dans le tableau
     for (let i = 0; i < equipmentList.length; i++) {
       if (marker.equipment[equipmentList[i]] === 0) {
         return false;
       }
     }
 
-    console.log(userPosition);
+    if (useDistance) {
+      console.log(distanceBetweenPoints(userPosition, marker));
+      return distanceBetweenPoints(userPosition, marker) <= distance;
+    }
 
     return true;
   }

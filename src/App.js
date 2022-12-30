@@ -55,6 +55,22 @@ const markersFromAPI = [
     isCovered: true,
     isVerified: true,
   },
+  {
+    parkId: 4,
+    equipment: {
+      equipmentId: 4,
+      horizontalBar: 1,
+      parallelBar: 0,
+      lowParallelBar: 1,
+      espalier: 1,
+      fixedRings: 1,
+      monkeyBridge: 1,
+    },
+    latitude: 45.612664596968905,
+    longitude: 0.36727238860871675,
+    isCovered: true,
+    isVerified: true,
+  },
 ];
 
 function App() {
