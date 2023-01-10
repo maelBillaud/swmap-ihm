@@ -1,5 +1,6 @@
 import { Checkbox, Switch, Slider, Button } from "@mantine/core";
 import { useState } from "react";
+import Emitter from "../services/emitter";
 import "../styles/ParkList.css";
 import Marker from "./Maker.js";
 
@@ -31,6 +32,7 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
       );
     return Math.round(distance * 1.609344, 2);
   }
+
   /**
    * Fonction qui va vérifier tous les filtres et retourner la liste de markers correspondante
    */
@@ -54,18 +56,31 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
     }
 
     if (useDistance) {
-      console.log(distanceBetweenPoints(userPosition, marker));
       return distanceBetweenPoints(userPosition, marker) <= distance;
     }
+
+    // var requestOptions = {
+    //   method: "GET",
+    // };
+
+    // fetch(
+    //   "https://api.geoapify.com/v1/geocode/reverse?lat=47.21184714042316&lon=-1.4361667066014965&apiKey=e1285231a71a46ce8719ebc9d1db5f4b",
+    //   requestOptions
+    // )
+    //   .then((response) => response.json())
+    //   .then((result) => console.log(result))
+    //   .catch((error) => console.log("error", error));
 
     return true;
   }
 
   /**
-   * Function qui va appliquer les filtres utilisateurs
+   * Function qui va mettre a jour les markers en fonction des filtres utilisateurs
    */
   function applyFilters() {
-    setMarkers(markersFromAPI.filter(checkFilters));
+    let filteredMarker = markersFromAPI.filter(checkFilters);
+    setMarkers(filteredMarker);
+    Emitter.emit("UPDATE_MAPS_MARKERS", filteredMarker);
   }
 
   return (

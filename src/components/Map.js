@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import getMapBoxAccessToken from "../environments/environment.js";
+import Emitter from "../services/emitter";
 import "../styles/Map.css";
 import Marker from "./Maker.js";
 
@@ -9,11 +10,41 @@ var ReactDOMServer = require("react-dom/server");
 
 mapboxgl.accessToken = getMapBoxAccessToken();
 
+// componentDidMount(prevProps) {
+//   Emitter.on('UPDATE_MAPS_MARKERS', () => {});
+// }
+
+// componentWillUnmount() {
+//     Emitter.off('UPDATE_MAPS_MARKERS');
+// }
+
 function Map({ markers, setMarkers }) {
   const mapContainerRef = useRef(null);
 
   // Initialisation de la map lors du changement du composant
   useEffect(() => {
+    //Tableau qui va stockers les markers
+    var markersMap = [];
+
+    /**
+     * Fonction qui va ajouter une liste de markers sur la map
+     * @param {*} markers markers à ajouter
+     */
+    function addMarkers(markers) {
+      markers.forEach((marker) => {
+        markersMap.push(
+          new mapboxgl.Marker({ color: "red" })
+            .setLngLat([marker.longitude, marker.latitude])
+            .setPopup(
+              new mapboxgl.Popup().setHTML(
+                ReactDOMServer.renderToString(<Marker marker={marker} />)
+              )
+            )
+            .addTo(map)
+        );
+      });
+    }
+
     const map = new mapboxgl.Map({
       container: mapContainerRef.current, // id du container
       style: "mapbox://styles/mapbox/streets-v12", // style URL
@@ -21,22 +52,30 @@ function Map({ markers, setMarkers }) {
       zoom: 12, // zoom de départ
     });
 
+    map.addControl(
+      new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserHeading: true,
+      })
+    );
+
     //Ajout des markers sur la map
-    markers.forEach((marker) => {
-      new mapboxgl.Marker({ color: "red" })
-        .setLngLat([marker.longitude, marker.latitude])
-        .setPopup(
-          new mapboxgl.Popup().setHTML(
-            ReactDOMServer.renderToString(<Marker marker={marker} />)
-          )
-        )
-        .addTo(map);
+    addMarkers(markers);
+
+    Emitter.on("UPDATE_MAPS_MARKERS", (filteredMarker) => {
+      // console.log("Map : ", filteredMarker);
+      markersMap.forEach((markerMap) => {
+        markerMap.remove();
+      });
+      addMarkers(filteredMarker);
     });
 
     map.on("click", (e) => {
       // When the map is clicked, get the geographic coordinate.
       const coordinate = map.unproject(e.point);
-      console.log("🚀 ~ file: Map.js:41 ~ map.on ~ coordinate", coordinate);
       new mapboxgl.Marker({ color: "red" })
         .setLngLat([coordinate.lng, coordinate.lat])
         .setPopup(new mapboxgl.Popup().setHTML("<h1>test<h1/>"))
@@ -57,12 +96,12 @@ function Map({ markers, setMarkers }) {
     //   )
     //   .addTo(map);
 
-    // add navigation control (the +/- zoom buttons)
+    // ajout des boutons de zoom
     map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
 
-    // clean up on unmount
+    // destruction de la map lors de la fin du cycle de vie du composent
     return () => map.remove();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return <div className="map-container" ref={mapContainerRef} />;
 }
