@@ -18,3 +18,7 @@ export function getAddressFromCoordinate(latitude, longitude) {
     },
   });
 }
+
+export function getParksApi() {
+  return axios.get(ROOT_PATH);
+}

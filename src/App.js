@@ -6,8 +6,11 @@ import NavBar from "./components/NavBar";
 import "./styles/App.css";
 import Emitter from "./services/emitter.js";
 import { Equipment, Park } from "./services/park/type";
-import { getAddressFromCoordinate, createParkApi } from "./services/park/api";
-import axios from "axios";
+import {
+  getAddressFromCoordinate,
+  createParkApi,
+  getParksApi,
+} from "./services/park/api";
 
 const markersFromAPI = [
   {
@@ -174,6 +177,10 @@ function App() {
 
     setShowAddMarker(false);
   }
+
+  React.useEffect(() => {
+    const res = getParksApi();
+  });
 
   return (
     <div>
