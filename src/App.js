@@ -195,15 +195,6 @@ function App() {
    * - Pour le stockage en Base de données du nouveau parc
    */
   async function createPark() {
-    const equipmentToCreate = {
-      horizontalBar: horizontalBar,
-      parallelBar: parallelBar,
-      lowParallelBar: lowParallelBar,
-      espalier: espalier,
-      fixedRings: fixedRings,
-      monkeyBridge: monkeyBridge,
-    };
-
     const res = await getAddressFromCoordinate(
       parkCoordinate.latitude,
       parkCoordinate.longitude
@@ -212,7 +203,14 @@ function App() {
     const data = res.data.features[0].properties;
 
     const parkToCreate = {
-      equipment: equipmentToCreate,
+      equipment: {
+        horizontalBar: horizontalBar,
+        parallelBar: parallelBar,
+        lowParallelBar: lowParallelBar,
+        espalier: espalier,
+        fixedRings: fixedRings,
+        monkeyBridge: monkeyBridge,
+      },
       latitude: parkCoordinate.latitude,
       longitude: parkCoordinate.longitude,
       country: data.country,
@@ -236,6 +234,16 @@ function App() {
 
     resetCreationData();
   }
+
+  Emitter.on("ADD_PARK_FROM_ADDRESS", async (parkToCreate) => {
+    let newPark = [];
+    newPark = await createParkApi(parkToCreate);
+
+    Emitter.emit("ADD_NEW_MARKER", [newPark.data]);
+
+    //setMarkers(markers.push(newPark.data));
+    markersFromApi.push(newPark.data);
+  });
 
   /**
    * Supprime un park et met a jour les markers et les filtres

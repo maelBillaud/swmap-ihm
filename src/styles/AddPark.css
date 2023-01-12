@@ -1,0 +1,20 @@
+.container {
+  padding: 0 1vw 2vh 1vw;
+}
+
+.address-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.block-address {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  padding-inline: 1vw;
+}
+
+.block-pays {
+  display: flex;
+  justify-content: center;
+}

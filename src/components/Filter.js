@@ -1,17 +1,17 @@
 import { Button } from "@mantine/core";
 import { IconFilter } from "@tabler/icons";
-import "../styles/Filter.css";
+import "../styles/Menu.css";
 
-function Filter({ showFilters, setShowFilters }) {
+function Filter({ showFilters, setShowFilters, setShowResearch }) {
   /**
    * Fonction qui permet de cacher les filtres
    */
   function switchFilterState() {
     setShowFilters(!showFilters);
+    setShowResearch(false);
   }
 
   return (
-    // <Button leftIcon={<IconFilter/>} variant="subtle" size="xl">Filters</Button>
     <div id="filter-container">
       <IconFilter
         size={30}

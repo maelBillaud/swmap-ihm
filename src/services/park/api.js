@@ -2,20 +2,48 @@ import axios from "axios";
 import { getGeoApiFyApiKey } from "../../environments/environment";
 
 const GEOAPIFY_KEY = getGeoApiFyApiKey();
-const GEOAPIFY_PATH = "https://api.geoapify.com/v1/geocode/reverse";
+const GEOAPIFY_PATH = "https://api.geoapify.com/v1/geocode";
+const GEOAPIFY_SEARCH = "/search";
+const GEOAPIFY_REVERSE = "/reverse";
 const ROOT_PATH = "http://localhost:8080/public/api/rest/parks";
 
 /**
  * Appel à une API externe qui traduit les coordonnées en adresse
  * @param {*} latitude latitude à traduire
- * @param {*} longitude longitude latitude à traduire
+ * @param {*} longitude longitude à traduire
  * @returns l'adresse correspondante aux coordonnées
  */
 export function getAddressFromCoordinate(latitude, longitude) {
-  return axios.get(GEOAPIFY_PATH, {
+  return axios.get(GEOAPIFY_PATH + GEOAPIFY_REVERSE, {
     params: {
       lat: latitude,
       lon: longitude,
+      apiKey: GEOAPIFY_KEY,
+    },
+  });
+}
+
+/**
+ * Appel à une API externe qui traduit les adresse en coordonnées
+ * @param {*} text adresse à traduire
+ * @returns les coordonnées correspondant à l'adresse
+ */
+export function getCoordinateFromAddress(
+  housenumber,
+  street,
+  postcode,
+  city,
+  country
+) {
+  return axios.get(GEOAPIFY_PATH + GEOAPIFY_SEARCH, {
+    params: {
+      housenumber: housenumber,
+      street: street,
+      postcode: postcode,
+      city: city,
+      country: country,
+      lang: "fr",
+      limit: 1,
       apiKey: GEOAPIFY_KEY,
     },
   });
