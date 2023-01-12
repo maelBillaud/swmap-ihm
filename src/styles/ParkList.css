@@ -1,36 +1,45 @@
 #container {
-  background-color: rgb(255, 255, 255);
   margin-top: 1vh;
   padding: 1vh 1vh 2vh 1vh;
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
-    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
-    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   max-height: 95vh;
-  width: 30vw;
+  width: 45vw;
+  max-width: 550px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
-#btn-appliquer {
+#filter {
+  padding-inline: 1vw;
   display: flex;
-  justify-content: right;
-  margin-top: 5%;
-  margin-right: 5%;
+  flex-direction: column;
+  max-width: 20vw;
+  gap: 2vh;
+}
+
+#checkbox {
+  margin-left: 3%;
 }
 
 #slider {
   margin: 5% 5%;
 }
 
+#btn-appliquer {
+  display: flex;
+  justify-content: left;
+  margin-top: 5%;
+  margin-right: 5%;
+}
+
 /* Firefox */
 #content {
   display: flex;
   flex-direction: column;
-  margin-top: 5%;
+  flex-grow: 1;
   overflow-y: auto;
   scrollbar-width: auto;
   scrollbar-color: #339af0 #ffffff;
+  height: 82vh;
   gap: 2vh;
 }
 

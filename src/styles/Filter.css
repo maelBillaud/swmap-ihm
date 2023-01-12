@@ -13,12 +13,13 @@
   background-color: transparent;
   font-size: 1.5rem;
   margin-inline: 0;
+  padding-left: 0.5vw;
   border: none;
   font-family: "Arimo", sans-serif;
   font-weight: normal;
 }
 
-#filter {
+#filter-container {
   display: flex;
   align-items: center;
 }

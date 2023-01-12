@@ -3,7 +3,6 @@ import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons";
 import Map from "./components/Map";
 import NavBar from "./components/NavBar";
-import ParkList from "./components/ParkList";
 import "./styles/App.css";
 
 const markersFromAPI = [
@@ -58,7 +57,6 @@ const markersFromAPI = [
 ];
 
 function App() {
-  const [showFilters, setShowFilters] = useState(false);
   //Ici on n'utilise pas de context car les markers sont susceptibles de changer
   //et on veut éviter trop de rechargement des composants fils
   const [markers, setMarkers] = useState(markersFromAPI);
@@ -83,19 +81,12 @@ function App() {
       )}
 
       <div id="nav-filter">
-        <div>
-          <NavBar showFilters={showFilters} setShowFilters={setShowFilters} />
-        </div>
-        <div>
-          {showFilters && (
-            <ParkList
-              markers={markers}
-              setMarkers={setMarkers}
-              markersFromAPI={markersFromAPI}
-              setShowAlert={setShowAlert}
-            />
-          )}
-        </div>
+        <NavBar
+          markers={markers}
+          setMarkers={setMarkers}
+          markersFromAPI={markersFromAPI}
+          setShowAlert={setShowAlert}
+        />
         <Map markers={markers} setMarkers={setMarkers} />
       </div>
     </div>

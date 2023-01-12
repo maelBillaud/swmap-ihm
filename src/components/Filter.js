@@ -9,7 +9,7 @@ function Filter({ showFilters, setShowFilters }) {
 
   return (
     // <Button leftIcon={<IconFilter/>} variant="subtle" size="xl">Filters</Button>
-    <div id="filter">
+    <div id="filter-container">
       <IconFilter
         size={30}
         color="#339AF0"
