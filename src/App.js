@@ -5,72 +5,145 @@ import Map from "./components/Map";
 import NavBar from "./components/NavBar";
 import "./styles/App.css";
 import Emitter from "./services/emitter.js";
-import { Equipment, Park } from "./services/park/type";
-import {
-  getAddressFromCoordinate,
-  createParkApi,
-  getParksApi,
-} from "./services/park/api";
+import { getAddressFromCoordinate, createParkApi } from "./services/park/api";
 
-const markersFromAPI = [
+const markersFromApi = [
   {
-    parkId: 1,
+    parkId: 42,
     equipment: {
-      equipmentId: 1,
-      horizontalBar: 2,
+      equipmentId: 60,
+      horizontalBar: 1,
       parallelBar: 1,
+      lowParallelBar: 1,
+      espalier: 1,
+      fixedRings: 1,
+      monkeyBridge: 1,
+    },
+    latitude: 47.22665,
+    longitude: -1.54373,
+    country: "France",
+    city: "Nantes",
+    postcode: "44000",
+    street: "Rue Dufour",
+    houseNumber: null,
+    isCovered: false,
+    verifierNumber: 0,
+  },
+  {
+    parkId: 43,
+    equipment: {
+      equipmentId: 61,
+      horizontalBar: 0,
+      parallelBar: 0,
       lowParallelBar: 0,
       espalier: 0,
-      fixedRings: 1,
-      monkeyBridge: 1,
+      fixedRings: 0,
+      monkeyBridge: 0,
     },
-    latitude: 47.301400982695824,
-    longitude: -1.4939905439296215,
+    latitude: 47.24416,
+    longitude: -1.57545,
+    country: "France",
+    city: "Nantes",
+    postcode: "44300",
+    street: "Boulevard Robert Schuman",
+    houseNumber: null,
+    isCovered: true,
+    verifierNumber: 0,
+  },
+  {
+    parkId: 44,
+    equipment: {
+      equipmentId: 62,
+      horizontalBar: 1,
+      parallelBar: 1,
+      lowParallelBar: 3,
+      espalier: 5,
+      fixedRings: 4,
+      monkeyBridge: 6,
+    },
+    latitude: 47.15821,
+    longitude: -1.66613,
+    country: "France",
+    city: "Bouaye",
+    postcode: "44830",
+    street: "Route De La Bergerie Verte",
+    houseNumber: null,
+    isCovered: true,
+    verifierNumber: 0,
+  },
+  {
+    parkId: 45,
+    equipment: {
+      equipmentId: 63,
+      horizontalBar: 1,
+      parallelBar: 1,
+      lowParallelBar: 1,
+      espalier: 2,
+      fixedRings: 0,
+      monkeyBridge: 2,
+    },
+    latitude: 47.17845,
+    longitude: -1.50216,
+    country: "France",
+    city: "Vertou",
+    postcode: "44120",
+    street: "Rue des Grands Châtaigniers",
+    houseNumber: null,
+    isCovered: true,
+    verifierNumber: 0,
+  },
+  {
+    parkId: 46,
+    equipment: {
+      equipmentId: 64,
+      horizontalBar: 0,
+      parallelBar: 0,
+      lowParallelBar: 0,
+      espalier: 1,
+      fixedRings: 0,
+      monkeyBridge: 2,
+    },
+    latitude: 47.2148,
+    longitude: -1.63091,
+    country: "France",
+    city: "Saint-Herblain",
+    postcode: "44800",
+    street: "Chemin Du Breil",
+    houseNumber: null,
     isCovered: false,
-    isVerified: false,
+    verifierNumber: 0,
   },
   {
-    parkId: 2,
+    parkId: 47,
     equipment: {
-      equipmentId: 2,
+      equipmentId: 65,
       horizontalBar: 1,
-      parallelBar: 0,
+      parallelBar: 1,
       lowParallelBar: 1,
       espalier: 1,
-      fixedRings: 1,
-      monkeyBridge: 1,
+      fixedRings: 2,
+      monkeyBridge: 0,
     },
-    latitude: 47.216061233335395,
-    longitude: -1.552955180984841,
+    latitude: 46.71857,
+    longitude: -1.02078,
+    country: "France",
+    city: "Saint-Germain-de-Prinçay",
+    postcode: "85110",
+    street: "Cité Des Boutons D'or",
+    houseNumber: null,
     isCovered: true,
-    isVerified: true,
-  },
-  {
-    parkId: 3,
-    equipment: {
-      equipmentId: 3,
-      horizontalBar: 1,
-      parallelBar: 0,
-      lowParallelBar: 1,
-      espalier: 1,
-      fixedRings: 1,
-      monkeyBridge: 1,
-    },
-    latitude: 45.612664596968905,
-    longitude: 0.36727238860871675,
-    isCovered: true,
-    isVerified: true,
+    verifierNumber: 0,
   },
 ];
 
 function App() {
   //Ici on n'utilise pas de context car les markers sont susceptibles de changer
   //et on veut éviter trop de rechargement des composants fils
-  const [markers, setMarkers] = useState(markersFromAPI);
+  const [markers, setMarkers] = useState(markersFromApi);
   const [showAlert, setShowAlert] = useState(false);
   const [showAddMarker, setShowAddMarker] = useState(false);
 
-  //Valeurs pour la création d'un park
+  //Valeurs pour la création d'un parc
   const [horizontalBar, setHorizontalBar] = useState(0);
   const [parallelBar, setParallelBar] = useState(0);
   const [lowParallelBar, setLowParallelBar] = useState(0);
@@ -83,21 +156,42 @@ function App() {
     longitude: 0,
   });
 
-  Emitter.on("ADD_NEW_MARKER", (coordinate) => {
+  Emitter.on("ADD_NEW_PARK", (coordinate) => {
     setShowAddMarker(true);
     setParkCoordinate(coordinate);
   });
 
+  /**
+   * Redéfinis les variables de création d'un parc à leur valeur par défaut
+   */
+  function resetCreationData() {
+    setHorizontalBar(0);
+    setParallelBar(0);
+    setLowParallelBar(0);
+    setEspalier(0);
+    setFixedRings(0);
+    setMonkeyBridge(0);
+    setIsCovered(false);
+    setParkCoordinate({
+      latitude: 0,
+      longitude: 0,
+    });
+  }
+
+  /**
+   * Créer un park avec deux appels API
+   * - Pour la traduction de coordonnées en adresses
+   * - Pour le stockage en Base de données du nouveau parc
+   */
   async function createPark() {
-    const equipmentToCreate = new Equipment(
-      null,
-      horizontalBar,
-      parallelBar,
-      lowParallelBar,
-      espalier,
-      fixedRings,
-      monkeyBridge
-    );
+    const equipmentToCreate = {
+      horizontalBar: horizontalBar,
+      parallelBar: parallelBar,
+      lowParallelBar: lowParallelBar,
+      espalier: espalier,
+      fixedRings: fixedRings,
+      monkeyBridge: monkeyBridge,
+    };
 
     const res = await getAddressFromCoordinate(
       parkCoordinate.latitude,
@@ -119,9 +213,14 @@ function App() {
       creationAgent: "admin",
     };
 
+    let newPark = [];
+    newPark = await createParkApi(parkToCreate);
+
+    Emitter.emit("ADD_NEW_MARKER", [newPark.data]);
+
     setShowAddMarker(false);
 
-    await createParkApi(parkToCreate);
+    resetCreationData();
   }
 
   return (
@@ -145,7 +244,8 @@ function App() {
       {/* Le dialog n'est pas dans un composant car avec mantine, 
       le composant se place au dessus du dialog. (il n'y est pas intégré) */}
       {showAddMarker && (
-        //## Je n'utilises pas de Modal car
+        //## Je n'utilises pas de Modal car il rentre en conflict
+        //## avec la map qui est en arrière plan et ça créer des bugs de rendu
         <Dialog
           opened={setShowAddMarker}
           withCloseButton
@@ -266,7 +366,7 @@ function App() {
         <NavBar
           markers={markers}
           setMarkers={setMarkers}
-          markersFromAPI={markersFromAPI}
+          markersFromApi={markersFromApi}
           setShowAlert={setShowAlert}
         />
         <Map markers={markers} />

@@ -4,8 +4,8 @@ import Emitter from "../services/emitter";
 import "../styles/ParkList.css";
 import Marker from "./Maker.js";
 
-/* markersFromAPI sera une constante qui va nous permettre de réinitialiser les filtres */
-function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
+/* markersFromApi sera une constante qui va nous permettre de réinitialiser les filtres */
+function ParkList({ markers, setMarkers, markersFromApi, setShowAlert }) {
   const [equipmentList, setEquipmentList] = useState([]);
   const [isCovered, setCovered] = useState(false);
   const [isVerified, setVerified] = useState(false);
@@ -44,7 +44,7 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
     }
 
     if (isVerified) {
-      if (!marker.isVerified) {
+      if (marker.verifierNumber < 5) {
         return false;
       }
     }
@@ -59,18 +59,6 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
       return distanceBetweenPoints(userPosition, marker) <= distance;
     }
 
-    // var requestOptions = {
-    //   method: "GET",
-    // };
-
-    // fetch(
-    //   "https://api.geoapify.com/v1/geocode/reverse?lat=47.21184714042316&lon=-1.4361667066014965&apiKey=e1285231a71a46ce8719ebc9d1db5f4b",
-    //   requestOptions
-    // )
-    //   .then((response) => response.json())
-    //   .then((result) => console.log(result))
-    //   .catch((error) => console.log("error", error));
-
     return true;
   }
 
@@ -78,7 +66,7 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
    * Function qui va mettre a jour les markers en fonction des filtres utilisateurs
    */
   function applyFilters() {
-    let filteredMarker = markersFromAPI.filter(checkFilters);
+    let filteredMarker = markersFromApi.filter(checkFilters);
     setMarkers(filteredMarker);
     Emitter.emit("UPDATE_MAPS_MARKERS", filteredMarker);
   }

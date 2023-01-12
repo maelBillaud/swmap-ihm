@@ -4,7 +4,7 @@ import HeaderMenu from "./HeaderMenu.js";
 import Filter from "./Filter";
 import ParkList from "./ParkList";
 
-function NavBar({ markers, setMarkers, markersFromAPI, setShowAlert }) {
+function NavBar({ markers, setMarkers, markersFromApi, setShowAlert }) {
   const [showFilters, setShowFilters] = useState(false);
   return (
     <div id="navbar">
@@ -17,7 +17,7 @@ function NavBar({ markers, setMarkers, markersFromAPI, setShowAlert }) {
           <ParkList
             markers={markers}
             setMarkers={setMarkers}
-            markersFromAPI={markersFromAPI}
+            markersFromApi={markersFromApi}
             setShowAlert={setShowAlert}
           />
         )}
