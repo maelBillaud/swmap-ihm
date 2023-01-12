@@ -27,5 +27,42 @@
 .title {
   font-size: medium;
   font-weight: bold;
-  margin-bottom: 0;
+  margin-bottom: 10px;
+}
+
+#equipment-input {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  padding-inline: 1vw;
+}
+
+#information-input {
+  padding-inline: 1vw;
+}
+
+.text-input {
+  width: 25vw;
+}
+
+.text {
+  display: flex;
+  width: 110%;
+}
+
+.icons {
+  margin-left: 1%;
+  position: relative;
+  top: 0px;
+}
+
+span {
+  white-space: nowrap;
+}
+
+.button-create {
+  margin-top: 2vh;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }

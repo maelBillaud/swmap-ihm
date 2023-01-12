@@ -10,7 +10,7 @@ var ReactDOMServer = require("react-dom/server");
 
 mapboxgl.accessToken = getMapBoxAccessToken();
 
-function Map({ markers }) {
+function Map({ markers, setSharedRefMap }) {
   const mapContainerRef = useRef(null);
 
   // Initialisation de la map lors du changement du composant
@@ -65,10 +65,13 @@ function Map({ markers }) {
       addMarkers(filteredMarker);
     });
 
-    map.on("contextmenu", (e) => {
+    map.on("click", (e) => {
       // When the map is clicked, get the geographic coordinate.
       const coordinate = map.unproject(e.point);
-      Emitter.emit("ADD_NEW_MARKER", [coordinate.lng, coordinate.lat]);
+      Emitter.emit("ADD_NEW_MARKER", {
+        latitude: coordinate.lat,
+        longitude: coordinate.lng,
+      });
       new mapboxgl.Marker({ color: "red" })
         .setLngLat([coordinate.lng, coordinate.lat])
         .setPopup(new mapboxgl.Popup().setHTML("<h1>test<h1/>"))

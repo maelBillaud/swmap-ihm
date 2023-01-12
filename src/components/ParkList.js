@@ -95,10 +95,9 @@ function ParkList({ markers, setMarkers, markersFromAPI, setShowAlert }) {
           >
             <div id="checkbox">
               <Checkbox value="horizontalBar" label="Barre fixe" />
+              <Checkbox value="parallelBar" label="Barre parallèle" />
               <Checkbox value="lowParallelBar" label="Barre parallèle basse" />
               <Checkbox value="fixedRings" label="Anneaux fixes" />
-
-              <Checkbox value="parallelBar" label="Barre parallèle" />
               <Checkbox value="espalier" label="Espalier" />
               <Checkbox value="monkeyBridge" label="Pont de singe" />
             </div>
