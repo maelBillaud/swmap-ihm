@@ -8,6 +8,9 @@ import Marker from "./Maker.js";
 
 var ReactDOMServer = require("react-dom/server");
 
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = // eslint-disable-next-line import/no-webpack-loader-syntax
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 mapboxgl.accessToken = getMapBoxAccessToken();
 
 function Map({ markers, setSharedRefMap }) {
