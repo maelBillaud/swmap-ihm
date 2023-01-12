@@ -85,7 +85,6 @@ function App() {
 
   Emitter.on("ADD_NEW_MARKER", (coordinate) => {
     setShowAddMarker(true);
-    console.log(coordinate);
     setParkCoordinate(coordinate);
   });
 
@@ -107,24 +106,6 @@ function App() {
 
     const data = res.data.features[0].properties;
 
-    // const parkToCreate = new Park(
-    //   null,
-    //   equipmentToCreate,
-    //   parkCoordinate.latitude,
-    //   parkCoordinate.longitude,
-    //   data.country,
-    //   data.city,
-    //   data.postcode,
-    //   data.street,
-    //   data.housenumber,
-    //   isCovered,
-    //   null,
-    //   null,
-    //   null,
-    //   null,
-    //   null
-    // );
-
     const parkToCreate = {
       equipment: equipmentToCreate,
       latitude: parkCoordinate.latitude,
@@ -135,52 +116,13 @@ function App() {
       street: data.street,
       housenumber: data.housenumber,
       isCovered: isCovered,
+      creationAgent: "admin",
     };
-
-    const test = {
-      equipment: {
-        horizontalBar: 0,
-        parallelBar: 1,
-        lowParallelBar: 2,
-        espalier: 3,
-        fixedRings: 4,
-        monkeyBridge: 3,
-      },
-      latitude: "37.40256",
-      longitude: "37.42155",
-      country: "France",
-      city: "Haute-Goulaine",
-      postcode: "44115",
-      street: "Rue de la Chaume",
-      houseNumber: 10,
-      isCovered: true,
-      creationAgent: "dev-Mael",
-    };
-
-    fetch("http://localhost:8080/public/api/rest", {
-      method: "POST",
-      body: JSON.stringify(test),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error(error));
-
-    // axios
-    //   .post("http://localhost:8080/public/api/rest", data)
-    //   .then((response) => console.log(response.data))
-    //   .catch((error) => console.log(error));
-
-    //await createParkApi(parkToCreate);
 
     setShowAddMarker(false);
-  }
 
-  React.useEffect(() => {
-    const res = getParksApi();
-  });
+    await createParkApi(parkToCreate);
+  }
 
   return (
     <div>
@@ -203,6 +145,7 @@ function App() {
       {/* Le dialog n'est pas dans un composant car avec mantine, 
       le composant se place au dessus du dialog. (il n'y est pas intégré) */}
       {showAddMarker && (
+        //## Je n'utilises pas de Modal car
         <Dialog
           opened={setShowAddMarker}
           withCloseButton
