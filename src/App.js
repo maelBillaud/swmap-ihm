@@ -5,7 +5,11 @@ import Map from "./components/Map";
 import NavBar from "./components/NavBar";
 import "./styles/App.css";
 import Emitter from "./services/emitter.js";
-import { getAddressFromCoordinate, createParkApi } from "./services/park/api";
+import {
+  getAddressFromCoordinate,
+  createParkApi,
+  deleteParkApi,
+} from "./services/park/api";
 
 const markersFromApi = [
   {
@@ -142,6 +146,7 @@ function App() {
   const [markers, setMarkers] = useState(markersFromApi);
   const [showAlert, setShowAlert] = useState(false);
   const [showAddMarker, setShowAddMarker] = useState(false);
+  const [showDeleteMarker, setShowDeleteMarker] = useState(false);
 
   //Valeurs pour la création d'un parc
   const [horizontalBar, setHorizontalBar] = useState(0);
@@ -155,10 +160,16 @@ function App() {
     latitude: 0,
     longitude: 0,
   });
+  const [parkToDelete, setParkToDelete] = useState();
 
   Emitter.on("ADD_NEW_PARK", (coordinate) => {
     setShowAddMarker(true);
     setParkCoordinate(coordinate);
+  });
+
+  Emitter.on("DELETE_PARK", (park) => {
+    setShowDeleteMarker(true);
+    setParkToDelete(park);
   });
 
   /**
@@ -218,9 +229,38 @@ function App() {
 
     Emitter.emit("ADD_NEW_MARKER", [newPark.data]);
 
+    //setMarkers(markers.push(newPark.data));
+    markersFromApi.push(newPark.data);
+
     setShowAddMarker(false);
 
     resetCreationData();
+  }
+
+  /**
+   * Supprime un park et met a jour les markers et les filtres
+   */
+  async function deletePark() {
+    await deleteParkApi(
+      parkToDelete.parkId,
+      parkToDelete.equipment.equipmentId
+    );
+
+    //setMarkers(markers.filter(marker => marker.parkId !== parkToDelete.parkId))
+    let index = markersFromApi.findIndex(
+      (marker) => marker.parkId === parkToDelete.parkId
+    );
+    index !== -1 && markersFromApi.splice(index, 1);
+
+    Emitter.emit(
+      "DELETE_MARKER",
+      parkToDelete.latitude,
+      parkToDelete.longitude
+    );
+
+    setShowDeleteMarker(false);
+
+    setParkToDelete(null);
   }
 
   return (
@@ -239,6 +279,39 @@ function App() {
           Veuillez activer et autoriser la géolocalisation pour utiliser ce
           filtre.
         </Alert>
+      )}
+
+      {showDeleteMarker && (
+        <Dialog
+          opened={showDeleteMarker}
+          withCloseButton
+          onClose={() => setShowDeleteMarker(false)}
+          position={{ top: "25%", left: "30%" }}
+          radius="lg"
+          className="dialog"
+        >
+          <p className="main-title">Suppression d'un Parc</p>
+          <p>
+            Voulez vous vraiment supprimer le parc situé
+            {parkToDelete.houseNumber == null
+              ? " "
+              : ` ${parkToDelete.houseNumber} `}
+            {`${parkToDelete.street}, ${parkToDelete.postcode} ${parkToDelete.city}, ${parkToDelete.country} ?`}
+          </p>
+          <div className="button-dialog-validation">
+            <Button radius="md" uppercase onClick={deletePark}>
+              Supprimer le Parc
+            </Button>
+            <Button
+              color="gray"
+              radius="md"
+              uppercase
+              onClick={() => showDeleteMarker(false)}
+            >
+              Annuler
+            </Button>
+          </div>
+        </Dialog>
       )}
 
       {/* Le dialog n'est pas dans un composant car avec mantine, 
@@ -346,7 +419,7 @@ function App() {
               }
             />
           </div>
-          <div className="button-create">
+          <div className="button-dialog-validation">
             <Button radius="md" uppercase onClick={createPark}>
               Créer le Parc
             </Button>

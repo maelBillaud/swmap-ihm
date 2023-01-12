@@ -7,6 +7,8 @@ import {
   IconX,
   IconChecks,
 } from "@tabler/icons";
+import { CloseButton } from "@mantine/core";
+import Emitter from "../services/emitter.js";
 
 //Constante que contient les nom français des équipements au singulier
 const singular = [
@@ -101,10 +103,13 @@ function displayEquipments(equipment) {
  */
 function displayAddress(marker) {
   const item = [];
-  const firstPart = `${marker.houseNumber} ${marker.street},`;
+  const firstPart =
+    marker.houseNumber == null
+      ? `${marker.street},`
+      : `${marker.houseNumber} ${marker.street},`;
   const secondPart = `${marker.postcode} ${marker.city}, ${marker.country}`;
   item.push(
-    <span key={marker.parkId}>
+    <span key={marker.parkId} className="address">
       {firstPart}
       <br />
       {secondPart}
@@ -114,9 +119,16 @@ function displayAddress(marker) {
 }
 
 function Marker({ marker }) {
+  function deletePark() {
+    Emitter.emit("DELETE_PARK", marker);
+  }
+
   return (
     <div id="marker-container">
-      <p className="title">Informations</p>
+      <div className="marker-header">
+        <p className="title">Informations</p>
+        <CloseButton size="md" className="close-button" onClick={deletePark} />
+      </div>
       <div>
         {marker.isCovered ? (
           <>

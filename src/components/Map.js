@@ -65,6 +65,7 @@ function Map({ markers }) {
             .addTo(map)
         );
       });
+      console.log("🚀 ~ file: Map.js:68 ~ markers.forEach ~ markers", markers);
     }
 
     Emitter.on("UPDATE_MAPS_MARKERS", (filteredMarker) => {
@@ -72,6 +73,18 @@ function Map({ markers }) {
         markerMap.remove();
       });
       addMarkers(filteredMarker);
+    });
+
+    Emitter.on("DELETE_MARKER", (latitude, longitude) => {
+      markersMap.forEach((markerMap) => {
+        const markerCoordinate = markerMap.getLngLat();
+        if (
+          markerCoordinate.lat === latitude &&
+          markerCoordinate.lgn === longitude
+        ) {
+          markerMap.remove();
+        }
+      });
     });
 
     map.on("dblclick", (e) => {

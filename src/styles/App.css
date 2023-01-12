@@ -61,7 +61,7 @@ span {
   white-space: nowrap;
 }
 
-.button-create {
+.button-dialog-validation {
   margin-top: 2vh;
   display: flex;
   justify-content: center;
