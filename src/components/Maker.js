@@ -28,8 +28,14 @@ const plural = [
   "ponts de singes",
 ];
 
-//Fonction qui retourne le text d'un equipment selon sa valeur.
-//Ajout d'un attribut id pour ajouter une key au span
+/**
+ * Affiche le texte d'un equipment selon sa valeur.
+ * @param {*} value valeur de l'equipment
+ * @param {*} singular correspondance du nom en français au singulier
+ * @param {*} plural correspondance du nom en français au pluriel
+ * @param {*} id identifiant pour ajouter une clé à son conteneur
+ * @returns le texte d'un equipment wrappé dans un span
+ */
 function displayEquipmentText(value, singular, plural, id) {
   const item = [];
   switch (value) {
@@ -60,7 +66,11 @@ function displayEquipmentText(value, singular, plural, id) {
   return item;
 }
 
-//Fonction qui affiche tous les
+/**
+ * Affiche tous les equipments d'un parc
+ * @param {*} equipment equipment d'un parc
+ * @returns les equipments d'un parc wrappés dans une liste
+ */
 function displayEquipments(equipment) {
   const items = [];
   let i = 0;
@@ -84,12 +94,30 @@ function displayEquipments(equipment) {
   return items;
 }
 
+/**
+ * Affiche l'adresse d'un parc
+ * @param {*} marker Marker contenant le parc dont l'adresse est à affichée
+ * @returns l'adresse d'un parc wrappée dans un <span>
+ */
+function displayAddress(marker) {
+  const item = [];
+  const firstPart = `${marker.house_number} ${marker.street},`;
+  const secondPart = `${marker.postcode} ${marker.city}, ${marker.country}`;
+  item.push(
+    <span>
+      {firstPart}
+      <br />
+      {secondPart}
+    </span>
+  );
+  return item;
+}
+
 function Marker({ marker }) {
   return (
     <div id="marker-container">
-      <h3>Parc de Street-Workout</h3>
-      <h4>Informations</h4>
-      <p>
+      <p className="title">Informations</p>
+      <div>
         {marker.isCovered ? (
           <>
             <IconUmbrella size={20} color="blue" className="icons" />
@@ -113,9 +141,11 @@ function Marker({ marker }) {
             <span>Ce parc n'est pas vérifié</span>
           </>
         )}
-      </p>
-      <h4>Équipements</h4>
+      </div>
+      <p className="title">Équipements</p>
       <div id="marker-equipment">{displayEquipments(marker.equipment)}</div>
+      <p className="title">Adresse</p>
+      <div id="marker-address">{displayAddress(marker)}</div>
     </div>
   );
 }

@@ -5,12 +5,18 @@
 
 #marker-container {
   font-family: "Arimo", sans-serif;
-  font-size: medium;
+  font-size: small;
   border: solid gray;
   border-radius: 15px;
   padding-inline: 5%;
   padding-bottom: 5%;
   margin-inline: 1vh;
+}
+
+.title {
+  font-size: medium;
+  font-weight: bold;
+  margin-bottom: 0;
 }
 
 .equipments {

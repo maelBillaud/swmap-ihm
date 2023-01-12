@@ -1,4 +1,4 @@
-import { Checkbox, Switch, Slider, Button, Tooltip } from "@mantine/core";
+import { Checkbox, Switch, Slider, Button } from "@mantine/core";
 import { useState } from "react";
 import Emitter from "../services/emitter";
 import "../styles/ParkList.css";
