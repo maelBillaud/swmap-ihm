@@ -3,6 +3,9 @@ import { IconFilter } from "@tabler/icons";
 import "../styles/Filter.css";
 
 function Filter({ showFilters, setShowFilters }) {
+  /**
+   * Fonction qui permet de cacher les filtres
+   */
   function switchFilterState() {
     setShowFilters(!showFilters);
   }

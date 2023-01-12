@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Alert } from "@mantine/core";
+import { Alert, Dialog, Text } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons";
 import Map from "./components/Map";
 import NavBar from "./components/NavBar";
 import "./styles/App.css";
+import Emitter from "./services/emitter";
 
 const markersFromAPI = [
   {
@@ -61,6 +62,14 @@ function App() {
   //et on veut éviter trop de rechargement des composants fils
   const [markers, setMarkers] = useState(markersFromAPI);
   const [showAlert, setShowAlert] = useState(false);
+  const [showAddMarker, setShowAddMarker] = useState(false);
+
+  var coordinateNewMarker = [];
+
+  Emitter.on("ADD_NEW_MARKER", (coordinate) => {
+    setShowAddMarker(true);
+    coordinateNewMarker = coordinate;
+  });
 
   return (
     <div>
@@ -80,6 +89,22 @@ function App() {
         </Alert>
       )}
 
+      {showAddMarker && (
+        <Dialog
+          opened={setShowAddMarker}
+          withCloseButton
+          onClose={() => setShowAddMarker(false)}
+          position={{ top: "35%", left: "35%" }}
+          radius="lg"
+          className="dialog"
+        >
+          <p className="main-title">
+            Ajout d'un nouveau parc à partir d'un point
+          </p>
+          <p className="title">Équipements du parc :</p>
+        </Dialog>
+      )}
+
       <div id="nav-filter">
         <NavBar
           markers={markers}
@@ -87,7 +112,12 @@ function App() {
           markersFromAPI={markersFromAPI}
           setShowAlert={setShowAlert}
         />
-        <Map markers={markers} setMarkers={setMarkers} />
+        <Map
+          markers={markers}
+          setMarkers={setMarkers}
+          setShowAddMarker={setShowAddMarker}
+          ShowAddMarker={showAddMarker}
+        />
       </div>
     </div>
   );

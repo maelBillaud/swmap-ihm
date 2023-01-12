@@ -10,15 +10,7 @@ var ReactDOMServer = require("react-dom/server");
 
 mapboxgl.accessToken = getMapBoxAccessToken();
 
-// componentDidMount(prevProps) {
-//   Emitter.on('UPDATE_MAPS_MARKERS', () => {});
-// }
-
-// componentWillUnmount() {
-//     Emitter.off('UPDATE_MAPS_MARKERS');
-// }
-
-function Map({ markers, setMarkers }) {
+function Map({ markers }) {
   const mapContainerRef = useRef(null);
 
   // Initialisation de la map lors du changement du composant
@@ -52,6 +44,7 @@ function Map({ markers, setMarkers }) {
       zoom: 12, // zoom de départ
     });
 
+    //Ajout de l'affichage de la position actuelle de l'utilisateur
     map.addControl(
       new mapboxgl.GeolocateControl({
         positionOptions: {
@@ -66,16 +59,16 @@ function Map({ markers, setMarkers }) {
     addMarkers(markers);
 
     Emitter.on("UPDATE_MAPS_MARKERS", (filteredMarker) => {
-      // console.log("Map : ", filteredMarker);
       markersMap.forEach((markerMap) => {
         markerMap.remove();
       });
       addMarkers(filteredMarker);
     });
 
-    map.on("click", (e) => {
+    map.on("contextmenu", (e) => {
       // When the map is clicked, get the geographic coordinate.
       const coordinate = map.unproject(e.point);
+      Emitter.emit("ADD_NEW_MARKER", [coordinate.lng, coordinate.lat]);
       new mapboxgl.Marker({ color: "red" })
         .setLngLat([coordinate.lng, coordinate.lat])
         .setPopup(new mapboxgl.Popup().setHTML("<h1>test<h1/>"))

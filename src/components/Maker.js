@@ -101,10 +101,10 @@ function displayEquipments(equipment) {
  */
 function displayAddress(marker) {
   const item = [];
-  const firstPart = `${marker.house_number} ${marker.street},`;
+  const firstPart = `${marker.houseNumber} ${marker.street},`;
   const secondPart = `${marker.postcode} ${marker.city}, ${marker.country}`;
   item.push(
-    <span>
+    <span key={marker.parkId}>
       {firstPart}
       <br />
       {secondPart}
