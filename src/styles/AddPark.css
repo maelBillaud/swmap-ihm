@@ -1,13 +1,22 @@
 .container {
   padding: 0 1vw 2vh 1vw;
+  max-width: 550px;
 }
 
-.address-input {
+.first-text {
+  display: flex;
+  justify-content: space-between;
+}
+.note {
+  font-size: 10px;
+}
+
+.address-input .equipment-input {
   display: flex;
   flex-direction: column;
 }
 
-.block-address {
+.block-input {
   display: flex;
   gap: 20px;
   justify-content: space-around;

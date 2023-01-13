@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, Checkbox, Button } from "@mantine/core";
+import { TextInput, Checkbox, Button, Badge, Tooltip } from "@mantine/core";
 import { IconCloudRain, IconUmbrella } from "@tabler/icons";
 import Emitter from "../services/emitter";
 import "../styles/AddPark.css";
@@ -56,9 +56,24 @@ function AddPark({ setShowResearch }) {
 
   return (
     <div className="container">
-      <p className="title">Adresse du parc :</p>
+      <div className="first-text">
+        <p className="title">Adresse du parc :</p>
+        <div>
+          <Tooltip
+            label="Vous pouvez ajouter un parc en double cliquant à l'endroit souhaité sur la map"
+            position="bottom-end"
+            multiline
+            width={220}
+            withArrow
+            transition="slide-left"
+            transitionDuration={200}
+          >
+            <Badge radius="xl">info</Badge>
+          </Tooltip>
+        </div>
+      </div>
       <div className="address-input">
-        <div className="block-address">
+        <div className="block-input">
           <TextInput
             label="Numéro de rue"
             placeholder="Numéro de la rue"
@@ -78,7 +93,7 @@ function AddPark({ setShowResearch }) {
             onChange={(event) => setStreet(event.currentTarget.value)}
           />
         </div>
-        <div className="block-address">
+        <div className="block-input">
           <TextInput
             label="Code postal"
             placeholder="Code postal de la ville"
@@ -111,8 +126,8 @@ function AddPark({ setShowResearch }) {
         </div>
       </div>
       <p className="title">Équipements du parc :</p>
-      <div id="equipment-input">
-        <div>
+      <div className="equipment-input">
+        <div className="block-input">
           <TextInput
             label="Barre fixe"
             placeholder="Nombre de barre fixe"
@@ -131,6 +146,8 @@ function AddPark({ setShowResearch }) {
             value={parallelBar}
             onChange={(event) => setParallelBar(event.currentTarget.value)}
           />
+        </div>
+        <div className="block-input">
           <TextInput
             label="Barre parallèle basse"
             placeholder="Nombre de barre parallèle basse"
@@ -140,8 +157,6 @@ function AddPark({ setShowResearch }) {
             value={lowParallelBar}
             onChange={(event) => setLowParallelBar(event.currentTarget.value)}
           />
-        </div>
-        <div>
           <TextInput
             label="Anneaux fixes"
             placeholder="Nombre d'anneaux fixes"
@@ -151,6 +166,8 @@ function AddPark({ setShowResearch }) {
             value={fixedRings}
             onChange={(event) => setFixedRings(event.currentTarget.value)}
           />
+        </div>
+        <div className="block-input">
           <TextInput
             label="Espalier"
             placeholder="Nombre d'espalier"
