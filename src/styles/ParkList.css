@@ -57,3 +57,36 @@
   border-radius: 10px;
   border: 3px solid #ffffff;
 }
+
+@media only screen and (max-width: 1000px) {
+  #container {
+    margin-bottom: 1vh;
+    padding: 1vh 1vh 2vh 1vh;
+    max-height: 95vh;
+    width: auto;
+    max-width: none;
+    display: flex;
+  }
+
+  #filter {
+    padding-inline: 1vw;
+    display: flex;
+    flex-direction: column;
+    min-width: 45%;
+    gap: 1vh;
+  }
+
+  #content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: auto;
+    scrollbar-color: #339af0 #ffffff;
+    height: 82vh;
+    gap: 2vh;
+  }
+
+  #checkbox {
+    margin-left: 3%;
+  }
+}

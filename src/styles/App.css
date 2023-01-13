@@ -14,9 +14,14 @@
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
-.dialog {
+.dialog-create {
   font-family: "Arimo", sans-serif;
-  width: fit-content;
+  width: auto;
+}
+
+.dialog-delete {
+  font-family: "Arimo", sans-serif;
+  width: auto;
 }
 
 .main-title {
@@ -31,14 +36,15 @@
   margin-bottom: 10px;
 }
 
-#equipment-input {
+.equipment-input {
   display: flex;
+  flex-direction: row;
   gap: 20px;
   justify-content: space-around;
   padding-inline: 1vw;
 }
 
-#information-input {
+.information-input {
   padding-inline: 1vw;
 }
 
@@ -66,4 +72,38 @@ span {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+.overflow-ok {
+  overflow: visible;
+  white-space: normal;
+}
+
+@media only screen and (max-width: 1000px) {
+  .dialog-delete {
+    font-family: "Arimo", sans-serif;
+    width: auto;
+    position: relative;
+    top: 20%;
+    left: -25%;
+  }
+
+  .dialog-create {
+    font-family: "Arimo", sans-serif;
+    width: auto;
+    position: relative;
+    top: 20%;
+    left: -25%;
+  }
+
+  .equipment-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-inline: 1vw;
+  }
+
+  .suppr-text {
+    font-size: small !important;
+  }
 }

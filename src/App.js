@@ -295,10 +295,10 @@ function App() {
           onClose={() => setShowDeleteMarker(false)}
           position={{ top: "25%", left: "30%" }}
           radius="lg"
-          className="dialog"
+          className="dialog-delete"
         >
           <p className="main-title">Suppression d'un Parc</p>
-          <p>
+          <p className="suppr-text">
             Voulez vous vraiment supprimer le parc situé
             {parkToDelete.houseNumber == null
               ? " "
@@ -313,7 +313,7 @@ function App() {
               color="gray"
               radius="md"
               uppercase
-              onClick={() => showDeleteMarker(false)}
+              onClick={() => setShowDeleteMarker(false)}
             >
               Annuler
             </Button>
@@ -332,13 +332,13 @@ function App() {
           onClose={() => setShowAddMarker(false)}
           position={{ top: "25%", left: "25%" }}
           radius="lg"
-          className="dialog"
+          className="dialog-create"
         >
           <p className="main-title">
             Ajout d'un nouveau parc à partir de la carte
           </p>
           <p className="title">Équipements du parc :</p>
-          <div id="equipment-input">
+          <div className="equipment-input">
             <div>
               <TextInput
                 label="Barre fixe"
@@ -403,24 +403,24 @@ function App() {
             </div>
           </div>
           <p className="title">Informations :</p>
-          <div id="information-input">
+          <div className="information-input">
             <Checkbox
               checked={isCovered}
               onChange={(event) => setIsCovered(event.currentTarget.checked)}
               label={
                 isCovered ? (
                   <div className="text">
-                    <span>
+                    <IconUmbrella size={20} color="blue" className="icons" />
+                    <span className="overflow-ok">
                       Le parc possède une protection contre les intempéries
                     </span>
-                    <IconUmbrella size={20} color="blue" className="icons" />
                   </div>
                 ) : (
                   <div className="text">
-                    <span>
+                    <IconCloudRain size={20} color="gray" className="icons" />
+                    <span className="overflow-ok">
                       Le parc possède une protection contre les intempéries
                     </span>
-                    <IconCloudRain size={20} color="gray" className="icons" />
                   </div>
                 )
               }

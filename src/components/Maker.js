@@ -43,7 +43,7 @@ function displayEquipmentText(value, singular, plural, id) {
   switch (value) {
     case 0:
       item.push(
-        <span key={`${id}-${singular}`}>
+        <span key={`${id}-${singular}`} className="overflow-ok">
           <IconX size={20} color="red" className="icons" />{" "}
           {value + " " + singular}
         </span>
@@ -51,7 +51,7 @@ function displayEquipmentText(value, singular, plural, id) {
       break;
     case 1:
       item.push(
-        <span key={`${id}-${singular}`}>
+        <span key={`${id}-${singular}`} className="overflow-ok">
           <IconCheck size={20} color="green" className="icons" />{" "}
           {value + " " + singular}
         </span>
@@ -59,7 +59,7 @@ function displayEquipmentText(value, singular, plural, id) {
       break;
     default:
       item.push(
-        <span key={`${id}-${singular}`}>
+        <span key={`${id}-${singular}`} className="overflow-ok">
           <IconChecks size={20} color="green" className="icons" />{" "}
           {value + " " + plural}
         </span>
@@ -109,7 +109,7 @@ function displayAddress(marker) {
       : `${marker.houseNumber} ${marker.street},`;
   const secondPart = `${marker.postcode} ${marker.city}, ${marker.country}`;
   item.push(
-    <span key={marker.parkId} className="address">
+    <span key={marker.parkId} className="overflow-ok">
       {firstPart}
       <br />
       {secondPart}
@@ -133,24 +133,24 @@ function Marker({ marker }) {
         {marker.isCovered ? (
           <>
             <IconUmbrella size={20} color="blue" className="icons" />
-            <span>Ce parc est couvert</span>
+            <span className="overflow-ok">Ce parc est couvert</span>
           </>
         ) : (
           <>
             <IconCloudRain size={20} color="gray" className="icons" />
-            <span>Ce parc n'est pas couvert</span>
+            <span className="overflow-ok">Ce parc n'est pas couvert</span>
           </>
         )}
         <br />
         {marker.isVerified ? (
           <>
             <IconCheck size={20} color="green" className="icons" />
-            <span>Ce parc est vérifié</span>
+            <span className="overflow-ok">Ce parc est vérifié</span>
           </>
         ) : (
           <>
             <IconX size={20} color="red" className="icons" />
-            <span>Ce parc n'est pas vérifié</span>
+            <span className="overflow-ok">Ce parc n'est pas vérifié</span>
           </>
         )}
       </div>

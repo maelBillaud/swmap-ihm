@@ -67,6 +67,7 @@ function AddPark({ setShowResearch }) {
             withArrow
             transition="slide-left"
             transitionDuration={200}
+            events={{ hover: true, touch: false }}
           >
             <Badge radius="xl">info</Badge>
           </Tooltip>
@@ -196,17 +197,17 @@ function AddPark({ setShowResearch }) {
           label={
             isCovered ? (
               <div className="text">
-                <span>
+                <IconUmbrella size={20} color="blue" className="icons" />
+                <span className="overflow-ok">
                   Le parc possède une protection contre les intempéries
                 </span>
-                <IconUmbrella size={20} color="blue" className="icons" />
               </div>
             ) : (
               <div className="text">
-                <span>
+                <IconCloudRain size={20} color="gray" className="icons" />
+                <span className="overflow-ok">
                   Le parc possède une protection contre les intempéries
                 </span>
-                <IconCloudRain size={20} color="gray" className="icons" />
               </div>
             )
           }
