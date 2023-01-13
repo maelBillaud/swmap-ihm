@@ -17,12 +17,8 @@ function AddPark({ setShowResearch }) {
   const [city, setCity] = useState("");
   const [postcode, setPostcode] = useState("");
   const [street, setStreet] = useState("");
-  const [houseNumber, setHouseNumber] = useState("");
+  const [houseNumber, setHouseNumber] = useState();
   const [isCovered, setIsCovered] = useState(false);
-  const [parkCoordinate, setParkCoordinate] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
 
   async function createParkFromAddress() {
     const res = await getCoordinateFromAddress(
@@ -33,10 +29,7 @@ function AddPark({ setShowResearch }) {
       country
     );
 
-    setParkCoordinate({
-      latitude: res.data.features[0].properties.lat,
-      longitude: res.data.features[0].properties.lon,
-    });
+    const data = res.data.features[0].properties;
 
     const parkToCreate = {
       equipment: {
@@ -47,8 +40,8 @@ function AddPark({ setShowResearch }) {
         fixedRings: fixedRings,
         monkeyBridge: monkeyBridge,
       },
-      latitude: parkCoordinate.latitude,
-      longitude: parkCoordinate.longitude,
+      latitude: data.lat,
+      longitude: data.lon,
       country: country,
       city: city,
       postcode: postcode,
@@ -87,15 +80,6 @@ function AddPark({ setShowResearch }) {
         </div>
         <div className="block-address">
           <TextInput
-            label="Ville"
-            placeholder="Nom de la ville"
-            variant="filled"
-            type="text"
-            className="text-input"
-            value={city}
-            onChange={(event) => setCity(event.currentTarget.value)}
-          />
-          <TextInput
             label="Code postal"
             placeholder="Code postal de la ville"
             variant="filled"
@@ -103,6 +87,15 @@ function AddPark({ setShowResearch }) {
             className="text-input"
             value={postcode}
             onChange={(event) => setPostcode(event.currentTarget.value)}
+          />
+          <TextInput
+            label="Ville"
+            placeholder="Nom de la ville"
+            variant="filled"
+            type="text"
+            className="text-input"
+            value={city}
+            onChange={(event) => setCity(event.currentTarget.value)}
           />
         </div>
         <div className="block-pays">

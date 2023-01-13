@@ -21,8 +21,6 @@ function Map({ markers }) {
     //Tableau qui va stockers les markers
     var markersMap = [];
 
-    console.log("🚀 ~ file: Map.js:92 ~ useEffect ~ markers", markers);
-
     const map = new mapboxgl.Map({
       container: mapContainerRef.current, // id du container
       style: "mapbox://styles/mapbox/streets-v12", // style URL
@@ -65,8 +63,11 @@ function Map({ markers }) {
             .addTo(map)
         );
       });
-      console.log("🚀 ~ file: Map.js:68 ~ markers.forEach ~ markers", markers);
     }
+
+    Emitter.on("ADD_NEW_MARKER", (newMarker) => {
+      addMarkers(newMarker);
+    });
 
     Emitter.on("UPDATE_MAPS_MARKERS", (filteredMarker) => {
       markersMap.forEach((markerMap) => {
@@ -94,10 +95,6 @@ function Map({ markers }) {
       Emitter.emit("ADD_NEW_PARK", {
         latitude: coordinate.lat,
         longitude: coordinate.lng,
-      });
-
-      Emitter.on("ADD_NEW_MARKER", (newMarker) => {
-        addMarkers(newMarker);
       });
     });
 

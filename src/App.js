@@ -221,7 +221,6 @@ function App() {
       isCovered: isCovered,
       creationAgent: "admin",
     };
-
     let newPark = [];
     newPark = await createParkApi(parkToCreate);
 
