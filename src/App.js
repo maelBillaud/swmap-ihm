@@ -338,7 +338,7 @@ function App() {
             Ajout d'un nouveau parc à partir de la carte
           </p>
           <p className="title">Équipements du parc :</p>
-          <div className="equipment-input">
+          <div className="app-equipment-input">
             <div>
               <TextInput
                 label="Barre fixe"

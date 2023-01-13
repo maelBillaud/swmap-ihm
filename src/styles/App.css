@@ -36,9 +36,9 @@
   margin-bottom: 10px;
 }
 
-.equipment-input {
+.app-equipment-input {
   display: flex;
-  flex-direction: row;
+  flex-direction: row !important;
   gap: 20px;
   justify-content: space-around;
   padding-inline: 1vw;

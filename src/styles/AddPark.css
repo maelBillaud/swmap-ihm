@@ -16,9 +16,9 @@
   flex-direction: column;
 }
 
-.equipment-input {
+.addPark-equipment-input {
   display: flex;
-  flex-direction: column !important;
+  flex-direction: column;
   gap: 20px;
   justify-content: space-around;
   padding-inline: 1vw;

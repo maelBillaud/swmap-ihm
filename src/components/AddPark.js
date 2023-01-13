@@ -127,7 +127,7 @@ function AddPark({ setShowResearch }) {
         </div>
       </div>
       <p className="title">Équipements du parc :</p>
-      <div className="equipment-input">
+      <div className="addPark-equipment-input">
         <div className="block-input">
           <TextInput
             label="Barre fixe"
