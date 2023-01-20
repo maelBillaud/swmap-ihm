@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import "../styles/Marker.css";
 import {
   IconCloudRain,
@@ -6,9 +6,14 @@ import {
   IconCheck,
   IconX,
   IconChecks,
+  IconStar,
 } from "@tabler/icons";
 import { CloseButton } from "@mantine/core";
 import Emitter from "../services/emitter.js";
+import {
+  addParkVerifierApi,
+  removeParkVerifierApi,
+} from "../services/park/parkApi.js";
 
 //Constante que contient les nom français des équipements au singulier
 const singular = [
@@ -119,15 +124,132 @@ function displayAddress(marker) {
 }
 
 function Marker({ marker }) {
+  /**
+   * Fonction d'appel de l'évènement de suppression d'un parc
+   */
   function deletePark() {
     Emitter.emit("DELETE_PARK", marker);
   }
+
+  /**
+   * Retourne true si l'utilisateur courant a vérifié le parc, false sinon
+   */
+  function isVerifiedByUser() {
+    const userId = JSON.parse(sessionStorage.getItem("userInfo")).userId;
+    if (marker.listVerifier === null) {
+      return false;
+    } else {
+      let index = marker.listVerifier.findIndex(
+        (oneOfUsersId) => oneOfUsersId === userId
+      );
+      return index !== -1;
+    }
+  }
+
+  /**
+   * Supprime un userId de la listeVerifier du marker
+   * @param {*} marker Marker a modifier
+   * @param {*} userId userId a supprimer de la liste
+   */
+  function removeIdFromListVerifier(marker, userId) {
+    let index = marker.listVerifier.findIndex(
+      (oneOfUsersId) => oneOfUsersId === userId
+    );
+    index !== -1 && marker.listVerifier.splice(index, 1);
+  }
+
+  /**
+   * Ajoute un userId de la listeVerifier du marker
+   * @param {*} marker Marker a modifier
+   * @param {*} userId userId a ajouter à la liste
+   */
+  function addIdToListVerifier(marker, userId) {
+    if (marker.listVerifier === null) {
+      marker.listVerifier = [userId];
+    } else {
+      marker.listVerifier.push(userId);
+    }
+  }
+
+  /**
+   * Suppression d'un verifier d'un park de la sessionStorage
+   * @param {*} userId userId du verifier a supprimer
+   */
+  function removeVerifierFromSessionStorage(userId) {
+    let markersFromApi = [];
+
+    markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
+    let index = markersFromApi.findIndex(
+      (markerToUpdate) => markerToUpdate.parkId === marker.parkId
+    );
+
+    removeIdFromListVerifier(markersFromApi[index], userId);
+
+    sessionStorage.setItem("parkList", JSON.stringify(markersFromApi));
+  }
+
+  /**
+   * Ajout d'un verifier à un park de la sessionStorage
+   * @param {*} userId userId du verifier a ajouter
+   */
+  function addVerifierToSessionStorage(userId) {
+    let markersFromApi = [];
+
+    markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
+    let index = markersFromApi.findIndex(
+      (markerToUpdate) => markerToUpdate.parkId === marker.parkId
+    );
+
+    addIdToListVerifier(markersFromApi[index], userId);
+
+    sessionStorage.setItem("parkList", JSON.stringify(markersFromApi));
+  }
+
+  /**
+   * Mise a jour des verifiers du park
+   */
+  async function updateVerifier() {
+    const verifier = {
+      parkId: marker.parkId,
+      userId: JSON.parse(sessionStorage.getItem("userInfo")).userId,
+      creationAgent: JSON.parse(sessionStorage.getItem("userInfo")).username,
+    };
+    if (verifiedByUser) {
+      await removeParkVerifierApi(verifier, sessionStorage.getItem("token"));
+      removeIdFromListVerifier(marker, verifier.userId);
+      setVerifiedByUser(false);
+      removeVerifierFromSessionStorage(verifier.userId);
+    } else {
+      await addParkVerifierApi(verifier, sessionStorage.getItem("token"));
+      addIdToListVerifier(marker, verifier.userId);
+      setVerifiedByUser(true);
+      addVerifierToSessionStorage(verifier.userId);
+    }
+  }
+
+  const [verifiedByUser, setVerifiedByUser] = useState(isVerifiedByUser);
 
   return (
     <div id="marker-container">
       <div className="marker-header">
         <p className="title">Informations</p>
-        <CloseButton size="md" className="close-button" onClick={deletePark} />
+        <div className="info-icon">
+          <IconStar
+            size={30}
+            className={
+              verifiedByUser ? "verifier-button-filled" : "verifier-button"
+            }
+            onClick={updateVerifier}
+          />
+          <span className="verifier-span" onClick={updateVerifier}>
+            {marker.listVerifier === null ? "0" : marker.listVerifier.length}
+          </span>
+          <CloseButton
+            size="md"
+            className="close-button"
+            onClick={deletePark}
+          />
+        </div>
       </div>
       <div>
         {marker.isCovered ? (

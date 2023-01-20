@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "Arimo";
+  src: url("../fonts/Arimo-Regular.ttf");
+}
+
+#filter-icon {
+  margin-left: 1vw;
+}
+
+#filter-button {
+  height: 6vh;
+  color: #339af0;
+  background-color: transparent;
+  font-size: 1.5rem;
+  margin-inline: 0;
+  padding-left: 0.5vw;
+  border: none;
+  font-family: "Arimo", sans-serif;
+  font-weight: normal;
+}
+
+#filter-container {
+  display: flex;
+  align-items: center;
+}
+
+#filter-icon:hover {
+  cursor: pointer;
+}

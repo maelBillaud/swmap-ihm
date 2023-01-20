@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, Dialog, TextInput, Checkbox, Button } from "@mantine/core";
 import { IconAlertCircle, IconCloudRain, IconUmbrella } from "@tabler/icons";
 import Map from "./components/Map";
@@ -9,141 +9,13 @@ import {
   getAddressFromCoordinate,
   createParkApi,
   deleteParkApi,
-} from "./services/park/api";
-
-const markersFromApi = [
-  {
-    parkId: 42,
-    equipment: {
-      equipmentId: 60,
-      horizontalBar: 1,
-      parallelBar: 1,
-      lowParallelBar: 1,
-      espalier: 1,
-      fixedRings: 1,
-      monkeyBridge: 1,
-    },
-    latitude: 47.22665,
-    longitude: -1.54373,
-    country: "France",
-    city: "Nantes",
-    postcode: "44000",
-    street: "Rue Dufour",
-    houseNumber: null,
-    isCovered: false,
-    verifierNumber: 0,
-  },
-  {
-    parkId: 43,
-    equipment: {
-      equipmentId: 61,
-      horizontalBar: 0,
-      parallelBar: 0,
-      lowParallelBar: 0,
-      espalier: 0,
-      fixedRings: 0,
-      monkeyBridge: 0,
-    },
-    latitude: 47.24416,
-    longitude: -1.57545,
-    country: "France",
-    city: "Nantes",
-    postcode: "44300",
-    street: "Boulevard Robert Schuman",
-    houseNumber: null,
-    isCovered: true,
-    verifierNumber: 0,
-  },
-  {
-    parkId: 44,
-    equipment: {
-      equipmentId: 62,
-      horizontalBar: 1,
-      parallelBar: 1,
-      lowParallelBar: 3,
-      espalier: 5,
-      fixedRings: 4,
-      monkeyBridge: 6,
-    },
-    latitude: 47.15821,
-    longitude: -1.66613,
-    country: "France",
-    city: "Bouaye",
-    postcode: "44830",
-    street: "Route De La Bergerie Verte",
-    houseNumber: null,
-    isCovered: true,
-    verifierNumber: 0,
-  },
-  {
-    parkId: 45,
-    equipment: {
-      equipmentId: 63,
-      horizontalBar: 1,
-      parallelBar: 1,
-      lowParallelBar: 1,
-      espalier: 2,
-      fixedRings: 0,
-      monkeyBridge: 2,
-    },
-    latitude: 47.17845,
-    longitude: -1.50216,
-    country: "France",
-    city: "Vertou",
-    postcode: "44120",
-    street: "Rue des Grands Châtaigniers",
-    houseNumber: null,
-    isCovered: true,
-    verifierNumber: 0,
-  },
-  {
-    parkId: 46,
-    equipment: {
-      equipmentId: 64,
-      horizontalBar: 0,
-      parallelBar: 0,
-      lowParallelBar: 0,
-      espalier: 1,
-      fixedRings: 0,
-      monkeyBridge: 2,
-    },
-    latitude: 47.2148,
-    longitude: -1.63091,
-    country: "France",
-    city: "Saint-Herblain",
-    postcode: "44800",
-    street: "Chemin Du Breil",
-    houseNumber: null,
-    isCovered: false,
-    verifierNumber: 0,
-  },
-  {
-    parkId: 47,
-    equipment: {
-      equipmentId: 65,
-      horizontalBar: 1,
-      parallelBar: 1,
-      lowParallelBar: 1,
-      espalier: 1,
-      fixedRings: 2,
-      monkeyBridge: 0,
-    },
-    latitude: 46.71857,
-    longitude: -1.02078,
-    country: "France",
-    city: "Saint-Germain-de-Prinçay",
-    postcode: "85110",
-    street: "Cité Des Boutons D'or",
-    houseNumber: null,
-    isCovered: true,
-    verifierNumber: 0,
-  },
-];
+  getParkByLocationFilter,
+} from "./services/park/parkApi";
 
 function App() {
   //Ici on n'utilise pas de context car les markers sont susceptibles de changer
   //et on veut éviter trop de rechargement des composants fils
-  const [markers, setMarkers] = useState(markersFromApi);
+  const [markers, setMarkers] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [showAddMarker, setShowAddMarker] = useState(false);
   const [showDeleteMarker, setShowDeleteMarker] = useState(false);
@@ -161,6 +33,50 @@ function App() {
     longitude: 0,
   });
   const [parkToDelete, setParkToDelete] = useState();
+
+  /**Distance maximal d'affichage des parcs hors mode voyage
+   * (correspond à peu près à la distance à partir de laquelle
+   * on peut atteindre chaque point de la France en partant du centre) */
+  const MAX_DISTANCE = 500;
+
+  /**
+   * Retourne la position courante de l'utilisateur
+   * @returns des coordonnées correspondant la position courante de l'utilisateur
+   */
+  async function getCurrentPosition() {
+    let userPosition = {
+      latitude: 46.53972,
+      longitude: 2.43027,
+    };
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        userPosition.latitude = position.coords.latitude;
+        userPosition.longitude = position.coords.longitude;
+      },
+      function (error) {
+        if (error.code === error.PERMISSION_DENIED) {
+          setShowAlert(true);
+        }
+      }
+    );
+    return userPosition;
+  }
+
+  useEffect(() => {
+    const asyncData = async () => {
+      const userPosition = await getCurrentPosition();
+      const res = await getParkByLocationFilter(
+        userPosition.latitude,
+        userPosition.longitude,
+        MAX_DISTANCE,
+        sessionStorage.getItem("token")
+      );
+      sessionStorage.setItem("parkList", JSON.stringify(res.data));
+      setMarkers(res.data);
+    };
+
+    asyncData().catch(console.error);
+  }, []);
 
   Emitter.on("ADD_NEW_PARK", (coordinate) => {
     setShowAddMarker(true);
@@ -187,6 +103,30 @@ function App() {
       latitude: 0,
       longitude: 0,
     });
+  }
+
+  /**
+   * Ajout d'un park à la liste retournée par l'API stockée dans le sessionStorage
+   * @param {*} park park à ajouter
+   */
+  function addParkToSessionStorage(park) {
+    let markersFromApi = [];
+    markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
+    markersFromApi.push(park);
+    sessionStorage.setItem("parkList", JSON.stringify(markersFromApi));
+  }
+
+  /**
+   * Supprime un park à la liste retournée par l'API stockée dans le sessionStorage
+   * @param {*} park park à supprimer
+   */
+  function deleteParkToSessionStorage() {
+    let markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
+    let index = markersFromApi.findIndex(
+      (marker) => marker.parkId === parkToDelete.parkId
+    );
+    index !== -1 && markersFromApi.splice(index, 1);
+    sessionStorage.setItem("parkList", JSON.stringify(markersFromApi));
   }
 
   /**
@@ -222,27 +162,16 @@ function App() {
       creationAgent: "admin",
     };
     let newPark = [];
-    newPark = await createParkApi(parkToCreate);
+    newPark = await createParkApi(
+      parkToCreate,
+      sessionStorage.getItem("token")
+    );
 
     Emitter.emit("ADD_NEW_MARKER", [newPark.data]);
-
-    //setMarkers(markers.push(newPark.data));
-    markersFromApi.push(newPark.data);
-
+    addParkToSessionStorage(newPark.data);
     setShowAddMarker(false);
-
     resetCreationData();
   }
-
-  Emitter.on("ADD_PARK_FROM_ADDRESS", async (parkToCreate) => {
-    let newPark = [];
-    newPark = await createParkApi(parkToCreate);
-
-    Emitter.emit("ADD_NEW_MARKER", [newPark.data]);
-
-    //setMarkers(markers.push(newPark.data));
-    markersFromApi.push(newPark.data);
-  });
 
   /**
    * Supprime un park et met a jour les markers et les filtres
@@ -250,14 +179,11 @@ function App() {
   async function deletePark() {
     await deleteParkApi(
       parkToDelete.parkId,
-      parkToDelete.equipment.equipmentId
+      parkToDelete.equipment.equipmentId,
+      sessionStorage.getItem("token")
     );
 
-    //setMarkers(markers.filter(marker => marker.parkId !== parkToDelete.parkId))
-    let index = markersFromApi.findIndex(
-      (marker) => marker.parkId === parkToDelete.parkId
-    );
-    index !== -1 && markersFromApi.splice(index, 1);
+    deleteParkToSessionStorage();
 
     Emitter.emit(
       "DELETE_MARKER",
@@ -266,7 +192,6 @@ function App() {
     );
 
     setShowDeleteMarker(false);
-
     setParkToDelete(null);
   }
 
@@ -446,10 +371,9 @@ function App() {
         <NavBar
           markers={markers}
           setMarkers={setMarkers}
-          markersFromApi={markersFromApi}
           setShowAlert={setShowAlert}
         />
-        <Map markers={markers} />
+        <Map markers={JSON.parse(sessionStorage.getItem("parkList"))} />
       </div>
     </div>
   );

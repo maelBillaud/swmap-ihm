@@ -5,8 +5,9 @@ import Filter from "./Filter";
 import Research from "./Research";
 import ParkList from "./ParkList";
 import AddPark from "./AddPark";
+import Logout from "./Logout";
 
-function NavBar({ markers, setMarkers, markersFromApi, setShowAlert }) {
+function NavBar({ markers, setMarkers, setShowAlert }) {
   const [showFilters, setShowFilters] = useState(false);
   const [showResearch, setShowResearch] = useState(false);
   return (
@@ -23,13 +24,13 @@ function NavBar({ markers, setMarkers, markersFromApi, setShowAlert }) {
           setShowResearch={setShowResearch}
           setShowFilters={setShowFilters}
         />
+        <Logout />
       </div>
       <div>
         {showFilters && (
           <ParkList
             markers={markers}
             setMarkers={setMarkers}
-            markersFromApi={markersFromApi}
             setShowAlert={setShowAlert}
           />
         )}
