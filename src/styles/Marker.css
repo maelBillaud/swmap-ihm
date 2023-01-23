@@ -34,35 +34,8 @@
   justify-content: space-between;
 }
 
-.info-icon {
-  display: flex;
-}
-
 .close-button {
   margin-top: 5px;
-}
-
-.verifier-button:hover,
-.verifier-button-filled:hover,
-.verifier-span:hover {
-  cursor: pointer;
-}
-
-.verifier-button {
-  margin-top: 3px;
-  color: yellow;
-}
-
-.verifier-button-filled {
-  margin-top: 2px;
-  color: yellow;
-  fill: yellow;
-}
-
-.verifier-span {
-  position: relative;
-  right: 18px;
-  top: 11px;
 }
 
 .overflow-ok {

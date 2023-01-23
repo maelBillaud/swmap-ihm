@@ -1,13 +1,11 @@
 import { Checkbox, Switch, Slider, Button } from "@mantine/core";
 import { useState } from "react";
-import { getParksApi } from "../services/park/parkApi.js";
 import Emitter from "../services/emitter";
 import "../styles/ParkList.css";
 import Marker from "./Maker.js";
 
 /* markersFromApi sera une constante qui va nous permettre de réinitialiser les filtres */
-function ParkList({ markers, setMarkers, setShowAlert }) {
-  const [isTravelMode, setTravelMode] = useState(false);
+function ParkList({ markers, setMarkers, markersFromApi, setShowAlert }) {
   const [equipmentList, setEquipmentList] = useState([]);
   const [isCovered, setCovered] = useState(false);
   const [isVerified, setVerified] = useState(false);
@@ -46,7 +44,7 @@ function ParkList({ markers, setMarkers, setShowAlert }) {
     }
 
     if (isVerified) {
-      if (marker.listVerifier < 5) {
+      if (marker.verifierNumber < 5) {
         return false;
       }
     }
@@ -67,15 +65,7 @@ function ParkList({ markers, setMarkers, setShowAlert }) {
   /**
    * Function qui va mettre a jour les markers en fonction des filtres utilisateurs
    */
-  async function applyFilters() {
-    var markersFromApi = [];
-    if (isTravelMode) {
-      let res = await getParksApi(sessionStorage.getItem("token"));
-      markersFromApi = res.data;
-    } else {
-      markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
-    }
-
+  function applyFilters() {
     let filteredMarker = markersFromApi.filter(checkFilters);
     setMarkers(filteredMarker);
     Emitter.emit("UPDATE_MAPS_MARKERS", filteredMarker);
@@ -84,14 +74,6 @@ function ParkList({ markers, setMarkers, setShowAlert }) {
   return (
     <div id="container">
       <div id="filter">
-        <Switch
-          checked={isTravelMode}
-          onChange={(event) => {
-            setTravelMode(event.currentTarget.checked);
-          }}
-          label="Mode voyage"
-          description="Afficher les parcs sur toute la planète"
-        />
         <div id="checkbox-group">
           <Checkbox.Group
             value={equipmentList}

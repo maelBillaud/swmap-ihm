@@ -3,10 +3,7 @@ import { TextInput, Checkbox, Button, Badge, Tooltip } from "@mantine/core";
 import { IconCloudRain, IconUmbrella } from "@tabler/icons";
 import Emitter from "../services/emitter";
 import "../styles/AddPark.css";
-import {
-  getCoordinateFromAddress,
-  createParkApi,
-} from "../services/park/parkApi";
+import { getCoordinateFromAddress } from "../services/park/api";
 
 function AddPark({ setShowResearch }) {
   //Valeurs pour la création d'un parc
@@ -23,19 +20,8 @@ function AddPark({ setShowResearch }) {
   const [houseNumber, setHouseNumber] = useState();
   const [isCovered, setIsCovered] = useState(false);
 
-  /**
-   * Ajout d'un park à la liste retournée par l'API stockée dans le sessionStorage
-   * @param {*} park park à ajouter
-   */
-  function addParkToSessionStorage(park) {
-    let markersFromApi = [];
-    markersFromApi = JSON.parse(sessionStorage.getItem("parkList"));
-    markersFromApi.push(park);
-    sessionStorage.setItem("parkList", JSON.stringify(markersFromApi));
-  }
-
   async function createParkFromAddress() {
-    let res = await getCoordinateFromAddress(
+    const res = await getCoordinateFromAddress(
       houseNumber,
       street,
       postcode,
@@ -65,11 +51,7 @@ function AddPark({ setShowResearch }) {
       creationAgent: "admin",
     };
 
-    res = await createParkApi(parkToCreate, sessionStorage.getItem("token"));
-    Emitter.emit("ADD_NEW_MARKER", [res.data]);
-    addParkToSessionStorage(res.data);
-
-    setShowResearch(false);
+    Emitter.emit("ADD_PARK_FROM_ADDRESS", parkToCreate);
   }
 
   return (
@@ -241,7 +223,7 @@ function AddPark({ setShowResearch }) {
           uppercase
           onClick={() => setShowResearch(false)}
         >
-          Fermer
+          Annuler
         </Button>
       </div>
     </div>
